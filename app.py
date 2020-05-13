@@ -108,7 +108,7 @@ async def items_handler(call: CallbackQuery):
         await Consultation.business_type.set()
 
 
-@dp.message_handler(text='🤝Получить консультацию', state='*')
+@dp.message_handler(text='❓Получить консультацию', state='*')
 async def books_handler(message: types.Message):
     await message.answer('Для какой сферы вам потребуется бот?Сообщение пишите прямо сюда')
     await Consultation.business_type.set()
