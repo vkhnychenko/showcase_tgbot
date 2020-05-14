@@ -50,7 +50,7 @@ async def books_handler(message: types.Message):
     await message.answer(bot_info, reply_markup=kb.capabilities)
 
 
-@dp.callback_query_handler(lambda call: call.data in ['capabilities'])
+@dp.callback_query_handler(lambda call: call.data in ['capabilities'], state='*')
 async def items_handler(call: CallbackQuery):
     await call.message.answer(bot_info_more)
     await call.message.answer(bot_quote, reply_markup=kb.info)
