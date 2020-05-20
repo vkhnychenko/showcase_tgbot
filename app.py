@@ -63,11 +63,13 @@ async def books_handler(message: types.Message):
 
 @dp.message_handler(text='🛒Заказать чат-бота', state='*')
 async def books_handler(message: types.Message):
-    await message.answer('Можете связаться по доступным ссылкам', reply_markup=kb.connection)
+    await message.answer('Для заказа напишите бизнес которым вы занимаетесь.')
+    await Consultation.business_type.set()
 
 
 @dp.message_handler(text='📲Контакты', state='*')
 async def books_handler(message: types.Message):
+    print(message)
     await message.answer('Можете связаться по доступным ссылкам', reply_markup=kb.connection)
 
 
@@ -99,14 +101,24 @@ async def books_handler(message: types.Message, state: FSMContext):
 async def items_handler(call: CallbackQuery):
     await bot.answer_callback_query(call.id)
     if call.data == 'pay':
-        await call.message.answer('Можете связаться по доступным ссылкам', reply_markup=kb.connection)
+        await call.message.answer('Каким бизнесом вы занимаетесь?Сообщение пишите прямо сюда')
+        await Consultation.business_type.set()
     if call.data == 'question':
-        await call.message.answer('Можете связаться по доступным ссылкам', reply_markup=kb.connection)
+        await call.message.answer('Напишите какой у вас вопрос?')
+        await Consultation.business_type.set()
 
 
 @dp.message_handler(text='❓Получить консультацию', state='*')
 async def books_handler(message: types.Message):
-    await message.answer('Можете связаться по доступным ссылкам', reply_markup=kb.connection)
+    await message.answer('Для какой сферы вам потребуется бот?Сообщение пишите прямо сюда')
+    await Consultation.business_type.set()
+
+
+@dp.message_handler(state=Consultation.business_type)
+async def books_handler(message: types.Message, state: FSMContext):
+    await bot.forward_message(ADMIN_ID, message.chat.id, message.message_id)
+    await message.answer('Отлично!Скоро с вами свяжемся.')
+    await state.reset_state()
 
 
 @dp.callback_query_handler(lambda call: call.data in ['left', 'right'], state='*')
